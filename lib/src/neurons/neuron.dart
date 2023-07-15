@@ -1,8 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 import 'dart:math';
 
 import 'package:sprint/sprint.dart';
-
 import 'package:synadart/src/activation.dart';
 import 'package:synadart/src/utils/mathematical_operations.dart';
 import 'package:synadart/src/utils/value_generator.dart';
@@ -22,11 +22,14 @@ class Neuron {
   /// The derivative of the activation algorithm.
   late final ActivationFunction activationPrime;
 
+  /// The algorithm used for this `Neuron`
+  late final ActivationAlgorithm activationAlgorithm;
+
   /// The sensitivity of this `Neuron` to the function adjusting [weights]
   /// during training.
   ///
   ///
-  final double learningRate;
+  late final double learningRate;
 
   /// The weights of connections to the precedent `Neurons`, which can be
   /// imagined as how influential each `Neuron` in the preceding layer is on
@@ -42,6 +45,13 @@ class Neuron {
   /// to determine the source of output, because a parentless `Neuron` will not
   /// have any connections.
   bool isInput = false;
+
+  /// Keys used to identify this `Neuron` once parsed into a [RawNeuron].
+  final _fieldWeight = 'weight';
+  final _fieldInput = 'input';
+  final _fieldActivationAlgorithm = 'activationAlgorithm';
+  final _fieldLearningRate = 'learningRate';
+  final _fieldIsFirstLayer = 'isFirstLayer';
 
   /// Creates a `Neuron` with the specified `ActivationAlgorithm`, which is then
   /// resolved to an `ActivationFunction`.
@@ -61,7 +71,7 @@ class Neuron {
   /// `Layer`.  If the [weights] aren't provided, they will be generated
   /// randomly.
   Neuron({
-    required ActivationAlgorithm activationAlgorithm,
+    required this.activationAlgorithm,
     required int parentLayerSize,
     required this.learningRate,
     List<double> weights = const [],
@@ -143,4 +153,57 @@ class Neuron {
   /// through the activation function.
   double get output =>
       weights.isEmpty ? inputs.first : activation(() => dot(inputs, weights));
+
+  /// Create a `Neuron` from the it's JSON Model
+  Neuron.fromJson(Map<String, dynamic> json) {
+    weights = List<double>.from(json[_fieldWeight] as List);
+    inputs = List<double>.from(json[_fieldInput] as List);
+    isInput = json[_fieldIsFirstLayer] as bool;
+    learningRate = json[_fieldLearningRate] as double;
+
+    final activationIndex = json[_fieldActivationAlgorithm] as int;
+    activationAlgorithm = ActivationAlgorithm.values[activationIndex];
+    activation = resolveActivationAlgorithm(activationAlgorithm);
+    activationPrime = resolveActivationDerivative(activationAlgorithm);
+  }
+
+  /// Parse this `Neuron` to a JSON Model
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        _fieldWeight: weights,
+        _fieldActivationAlgorithm: activationAlgorithm.index,
+        _fieldLearningRate: learningRate,
+        _fieldIsFirstLayer: isInput,
+        _fieldInput: inputs
+      };
+
+  Neuron copyWith({
+    ActivationFunction? activation,
+    ActivationFunction? activationPrime,
+    ActivationAlgorithm? activationAlgorithm,
+    double? learningRate,
+    List<double>? weights,
+    List<double>? inputs,
+    bool? isInput,
+  }) {
+    return Neuron(
+      activationAlgorithm: activationAlgorithm ?? this.activationAlgorithm,
+      learningRate: learningRate ?? this.learningRate,
+      weights: weights ?? this.weights,
+      parentLayerSize: (weights ?? this.weights).length,
+    )
+      ..inputs = inputs ?? this.inputs
+      ..isInput = isInput ?? this.isInput;
+  }
+
+  Neuron variation({double variationRate = 0.1}) {
+    final variationRateHalf = variationRate / 2;
+    return copyWith(
+      weights: weights.map((e) {
+        return nextDouble(
+          from: e * (1 - variationRateHalf),
+          to: e * (1 + variationRateHalf),
+        );
+      }).toList(),
+    );
+  }
 }

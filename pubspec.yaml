@@ -18,3 +18,4 @@ dependencies:
 
 dev_dependencies:
   words: ^0.1.1
+  flutter_lints: ^2.0.0
