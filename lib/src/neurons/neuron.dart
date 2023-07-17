@@ -47,11 +47,11 @@ class Neuron {
   bool isInput = false;
 
   /// Keys used to identify this `Neuron` once parsed into a [RawNeuron].
-  final _fieldWeight = 'weight';
-  final _fieldInput = 'input';
-  final _fieldActivationAlgorithm = 'activationAlgorithm';
-  final _fieldLearningRate = 'learningRate';
-  final _fieldIsFirstLayer = 'isFirstLayer';
+  static const _fieldWeight = 'weight';
+  static const _fieldInput = 'input';
+  static const _fieldActivationAlgorithm = 'activationAlgorithm';
+  static const _fieldLearningRate = 'learningRate';
+  static const _fieldIsFirstLayer = 'isFirstLayer';
 
   /// Creates a `Neuron` with the specified `ActivationAlgorithm`, which is then
   /// resolved to an `ActivationFunction`.
@@ -155,16 +155,17 @@ class Neuron {
       weights.isEmpty ? inputs.first : activation(() => dot(inputs, weights));
 
   /// Create a `Neuron` from the it's JSON Model
-  Neuron.fromJson(Map<String, dynamic> json) {
-    weights = List<double>.from(json[_fieldWeight] as List);
-    inputs = List<double>.from(json[_fieldInput] as List);
-    isInput = json[_fieldIsFirstLayer] as bool;
-    learningRate = json[_fieldLearningRate] as double;
-
+  factory Neuron.fromJson(Map<String, dynamic> json) {
     final activationIndex = json[_fieldActivationAlgorithm] as int;
-    activationAlgorithm = ActivationAlgorithm.values[activationIndex];
-    activation = resolveActivationAlgorithm(activationAlgorithm);
-    activationPrime = resolveActivationDerivative(activationAlgorithm);
+    final weights = List<double>.from(json[_fieldWeight] as List);
+    return Neuron(
+      activationAlgorithm: ActivationAlgorithm.values[activationIndex],
+      learningRate: json[_fieldLearningRate] as double,
+      weights: weights,
+      parentLayerSize: weights.length,
+    )
+      ..inputs = List<double>.from(json[_fieldInput] as List)
+      ..isInput = json[_fieldIsFirstLayer] as bool;
   }
 
   /// Parse this `Neuron` to a JSON Model

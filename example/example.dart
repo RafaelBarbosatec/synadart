@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:synadart/src/layers/core/dense.dart';
 import 'package:synadart/synadart.dart';
 
