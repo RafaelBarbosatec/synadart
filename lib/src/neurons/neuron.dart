@@ -29,7 +29,7 @@ class Neuron {
   /// during training.
   ///
   ///
-  late final double learningRate;
+  final double learningRate;
 
   /// The weights of connections to the precedent `Neurons`, which can be
   /// imagined as how influential each `Neuron` in the preceding layer is on
