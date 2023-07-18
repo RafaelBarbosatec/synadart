@@ -1,7 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:sprint/sprint.dart';
-
 import 'package:synadart/src/activation.dart';
 import 'package:synadart/src/neurons/neuron.dart';
 import 'package:synadart/src/utils/mathematical_operations.dart';
@@ -10,6 +10,10 @@ import 'package:synadart/src/utils/mathematical_operations.dart';
 /// 'column' of `Neurons` that can be manipulated through accepting new data and
 /// trained.
 class Layer {
+  static const String _activationField = 'activation';
+  static const String _neuronsField = 'neurons';
+  static const String _isInputField = 'isInput';
+
   /// `Sprint` instance for logging messages.
   final Sprint log = Sprint('Layer');
 
@@ -17,7 +21,7 @@ class Layer {
   final ActivationAlgorithm activation;
 
   /// The `Neurons` part of this `Layer`.
-  final List<Neuron> neurons = [];
+  final List<Neuron> neurons;
 
   /// The number of `Neurons` this `Layer` comprises.
   final int size;
@@ -36,7 +40,8 @@ class Layer {
   Layer({
     required this.size,
     required this.activation,
-  }) {
+    List<Neuron>? neurons,
+  }) : neurons = neurons ?? [] {
     if (size < 1) {
       log.severe('A layer must contain at least one neuron.');
       exit(0);
@@ -108,4 +113,49 @@ class Layer {
   /// Returns a list of this `Layer`'s `Neuron`s' outputs
   List<double> get output =>
       List<double>.from(neurons.map<double>((neuron) => neuron.output));
+
+  factory Layer.fromJson(Map<String, dynamic> json) {
+    final activation =
+        ActivationAlgorithm.values[json[_activationField] as int];
+    final neurons = (json[_neuronsField] as List<Map<String, dynamic>>)
+        .map(Neuron.fromJson)
+        .toList();
+    final isInput = json[_isInputField];
+
+    return Layer(
+      size: neurons.length,
+      activation: activation,
+      neurons: neurons,
+    )
+      // Only the firt layer is an input layer
+      ..isInput = isInput;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      _activationField: activation.index,
+      _neuronsField: neurons.map((e) => e.toJson()).toList(),
+      _isInputField: isInput,
+    };
+  }
+
+  Layer variation({double variationRate = 0.1}) {
+    return copyWith(
+      neurons: neurons
+          .map((e) => e.variation(variationRate: variationRate))
+          .toList(),
+    );
+  }
+
+  Layer copyWith({
+    ActivationAlgorithm? activation,
+    bool? isInput,
+    List<Neuron>? neurons,
+  }) {
+    return Layer(
+      activation: activation ?? this.activation,
+      size: (neurons ?? this.neurons).length,
+      neurons: neurons ?? this.neurons,
+    )..isInput = isInput ?? this.isInput;
+  }
 }

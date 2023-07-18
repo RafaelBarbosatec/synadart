@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:synadart/src/layers/core/dense.dart';
 import 'package:synadart/synadart.dart';
 
@@ -71,4 +73,23 @@ void main() {
   print('Is 0 a 5? ${network.process(trainingData[0])}');
   print('Is 8 a 5? ${network.process(trainingData[8])}');
   print('Is 3 a 5? ${network.process(trainingData[3])}');
+  final data = network.toMap();
+  final newNetwork = Sequential.fromMap(data);
+  print('----------- toMap -------------');
+  print('Is 0 a 5? ${newNetwork.process(trainingData[0])}');
+  print('Is 8 a 5? ${newNetwork.process(trainingData[8])}');
+  print('Is 3 a 5? ${newNetwork.process(trainingData[3])}');
+
+  final variationNetwork = network.variation();
+  print('----------- variation -------------');
+  int indexLayer = 0;
+  for (var layer in variationNetwork.layers) {
+    int indexNeuron = 0;
+    for (var neuron in layer.neurons) {
+      print(
+          '${network.layers[indexLayer].neurons[indexNeuron].weights.first} -> ${neuron.weights.first}');
+      indexNeuron++;
+    }
+    indexLayer++;
+  }
 }
