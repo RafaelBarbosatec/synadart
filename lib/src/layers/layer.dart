@@ -6,6 +6,9 @@ import 'package:synadart/src/activation.dart';
 import 'package:synadart/src/neurons/neuron.dart';
 import 'package:synadart/src/utils/mathematical_operations.dart';
 
+export 'core/dense.dart';
+export 'recurrent/lstm.dart';
+
 /// Representation of a single `Layer` inside a `Network`, more accurately a
 /// 'column' of `Neurons` that can be manipulated through accepting new data and
 /// trained.
