@@ -2,6 +2,6 @@
 /// educational purposes.
 library synadart;
 
+export 'src/layers/layer.dart';
 export 'src/activation.dart';
-
 export 'src/networks/sequential.dart';
