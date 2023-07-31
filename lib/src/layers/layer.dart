@@ -142,10 +142,10 @@ class Layer {
     };
   }
 
-  Layer variation({double variationRate = 0.1}) {
+  Layer variation() {
     return copyWith(
       neurons: neurons
-          .map((e) => e.variation(variationRate: variationRate))
+          .map((e) => e.variation())
           .toList(),
     );
   }
