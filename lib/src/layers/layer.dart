@@ -120,8 +120,8 @@ class Layer {
   factory Layer.fromJson(Map<String, dynamic> json) {
     final activation =
         ActivationAlgorithm.values[json[_activationField] as int];
-    final neurons = (json[_neuronsField] as List<Map<String, dynamic>>)
-        .map(Neuron.fromJson)
+    final neurons = (json[_neuronsField] as List)
+        .map((e) => Neuron.fromJson((e as Map).cast()))
         .toList();
     final isInput = json[_isInputField];
 
