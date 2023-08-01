@@ -196,18 +196,18 @@ class Neuron {
       ..isInput = isInput ?? this.isInput;
   }
 
-  Neuron variation() {
+  Neuron variation({double rateVariation = 1.0}) {
     var random = Random();
     final limit = 1 / sqrt(weights.length);
     return copyWith(
       weights: weights.map((e) {
-        switch (random.nextInt(3)) {
+        switch (random.nextInt(4)) {
           case 0:
             return nextDouble(from: -limit, to: limit);
           case 1:
-            return e + random.nextDouble();
+            return e + (random.nextDouble() * rateVariation);
           case 2:
-            return e * random.nextDouble();
+            return e * (random.nextDouble() * rateVariation);
           default:
             return e;
         }
