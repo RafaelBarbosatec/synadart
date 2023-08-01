@@ -198,19 +198,16 @@ class Neuron {
 
   Neuron variation() {
     var random = Random();
+    final limit = 1 / sqrt(weights.length);
     return copyWith(
       weights: weights.map((e) {
-        switch (random.nextInt(5)) {
+        switch (random.nextInt(3)) {
           case 0:
-            return random.nextDouble();
+            return nextDouble(from: -limit, to: limit);
           case 1:
             return e + random.nextDouble();
           case 2:
-            return e - random.nextDouble();
-          case 3:
             return e * random.nextDouble();
-          case 4:
-            return e * -random.nextDouble();
           default:
             return e;
         }
