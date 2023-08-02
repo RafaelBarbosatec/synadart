@@ -13,6 +13,7 @@ export 'recurrent/lstm.dart';
 /// 'column' of `Neurons` that can be manipulated through accepting new data and
 /// trained.
 class Layer {
+  /// Keys used to identify this `Layer` once parsed to [Map].
   static const String _activationField = 'activation';
   static const String _neuronsField = 'neurons';
   static const String _isInputField = 'isInput';
@@ -129,9 +130,7 @@ class Layer {
       size: neurons.length,
       activation: activation,
       neurons: neurons,
-    )
-      // Only the firt layer is an input layer
-      ..isInput = isInput;
+    )..isInput = isInput;
   }
 
   Map<String, dynamic> toJson() {

@@ -46,11 +46,10 @@ class Neuron {
   /// have any connections.
   bool isInput = false;
 
-  /// Keys used to identify this `Neuron` once parsed into a [RawNeuron].
-  static const _fieldWeight = 'weight';
-  static const _fieldActivationAlgorithm = 'activationAlgorithm';
-  static const _fieldLearningRate = 'learningRate';
-  static const _fieldIsFirstLayer = 'isFirstLayer';
+  /// Keys used to identify this `Neuron` once parsed to [Map].
+  static const _weightsField = 'weights';
+  static const _activationField = 'activation';
+  static const _learningRateField = 'learningRate';
 
   /// Creates a `Neuron` with the specified `ActivationAlgorithm`, which is then
   /// resolved to an `ActivationFunction`.
@@ -155,22 +154,21 @@ class Neuron {
 
   /// Create a `Neuron` from the it's JSON Model
   factory Neuron.fromJson(Map<String, dynamic> json) {
-    final activationIndex = json[_fieldActivationAlgorithm] as int;
-    final weights = List<double>.from(json[_fieldWeight] as List);
+    final activationIndex = json[_activationField] as int;
+    final weights = List<double>.from(json[_weightsField] as List);
     return Neuron(
       activationAlgorithm: ActivationAlgorithm.values[activationIndex],
-      learningRate: json[_fieldLearningRate] as double,
+      learningRate: json[_learningRateField] as double,
       weights: weights,
       parentLayerSize: weights.length,
-    )..isInput = json[_fieldIsFirstLayer] as bool;
+    );
   }
 
   /// Parse this `Neuron` to a JSON Model
   Map<String, dynamic> toJson() => <String, dynamic>{
-        _fieldWeight: weights,
-        _fieldActivationAlgorithm: activationAlgorithm.index,
-        _fieldLearningRate: learningRate,
-        _fieldIsFirstLayer: isInput,
+        _weightsField: weights,
+        _activationField: activationAlgorithm.index,
+        _learningRateField: learningRate,
       };
 
   Neuron copyWith({
@@ -179,14 +177,13 @@ class Neuron {
     ActivationAlgorithm? activationAlgorithm,
     double? learningRate,
     List<double>? weights,
-    bool? isInput,
   }) {
     return Neuron(
       activationAlgorithm: activationAlgorithm ?? this.activationAlgorithm,
       learningRate: learningRate ?? this.learningRate,
       weights: weights ?? this.weights,
       parentLayerSize: (weights ?? this.weights).length,
-    )..isInput = isInput ?? this.isInput;
+    );
   }
 
   Neuron variation({double rateVariation = 1.0}) {
