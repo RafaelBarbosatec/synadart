@@ -48,7 +48,6 @@ class Neuron {
 
   /// Keys used to identify this `Neuron` once parsed into a [RawNeuron].
   static const _fieldWeight = 'weight';
-  static const _fieldInput = 'input';
   static const _fieldActivationAlgorithm = 'activationAlgorithm';
   static const _fieldLearningRate = 'learningRate';
   static const _fieldIsFirstLayer = 'isFirstLayer';
@@ -163,9 +162,7 @@ class Neuron {
       learningRate: json[_fieldLearningRate] as double,
       weights: weights,
       parentLayerSize: weights.length,
-    )
-      ..inputs = List<double>.from(json[_fieldInput] as List)
-      ..isInput = json[_fieldIsFirstLayer] as bool;
+    )..isInput = json[_fieldIsFirstLayer] as bool;
   }
 
   /// Parse this `Neuron` to a JSON Model
@@ -174,7 +171,6 @@ class Neuron {
         _fieldActivationAlgorithm: activationAlgorithm.index,
         _fieldLearningRate: learningRate,
         _fieldIsFirstLayer: isInput,
-        _fieldInput: inputs
       };
 
   Neuron copyWith({
@@ -183,7 +179,6 @@ class Neuron {
     ActivationAlgorithm? activationAlgorithm,
     double? learningRate,
     List<double>? weights,
-    List<double>? inputs,
     bool? isInput,
   }) {
     return Neuron(
@@ -191,9 +186,7 @@ class Neuron {
       learningRate: learningRate ?? this.learningRate,
       weights: weights ?? this.weights,
       parentLayerSize: (weights ?? this.weights).length,
-    )
-      ..inputs = inputs ?? this.inputs
-      ..isInput = isInput ?? this.isInput;
+    )..isInput = isInput ?? this.isInput;
   }
 
   Neuron variation({double rateVariation = 1.0}) {
