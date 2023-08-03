@@ -34,11 +34,7 @@ class Sequential extends Network with Backpropagation {
     return Sequential(
       learningRate: learningRate,
     )..layers.addAll(layers.map((e) {
-        return e.isInput
-            ? e.copyWith()
-            : e.variation(
-                rateVariation: rateVariation,
-              );
+        return e.isInput ? e.copyWith() : e.variation();
       }).toList());
   }
 }

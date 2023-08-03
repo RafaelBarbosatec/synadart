@@ -186,7 +186,7 @@ class Neuron {
     );
   }
 
-  Neuron variation({double rateVariation = 1.0}) {
+  Neuron variation() {
     var random = Random();
     final limit = 1 / sqrt(weights.length);
     return copyWith(
@@ -195,9 +195,9 @@ class Neuron {
           case 0:
             return nextDouble(from: -limit, to: limit);
           case 1:
-            return e + (random.nextDouble() * rateVariation);
+            return e + random.nextInt(101) / 100;
           case 2:
-            return e * (random.nextDouble() * rateVariation);
+            return e * random.nextInt(10001) / 10000 + 0.5;
           default:
             return e;
         }
