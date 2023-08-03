@@ -191,13 +191,13 @@ class Neuron {
     final limit = 1 / sqrt(weights.length);
     return copyWith(
       weights: weights.map((e) {
-        switch (random.nextInt(4)) {
+        switch (random.nextInt(3)) {
           case 0:
             return nextDouble(from: -limit, to: limit);
           case 1:
-            return e + random.nextInt(101) / 100;
+            return e + random.nextDouble();
           case 2:
-            return e * random.nextInt(10001) / 10000 + 0.5;
+            return e * random.nextDouble() + 0.5;
           default:
             return e;
         }

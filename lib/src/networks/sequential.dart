@@ -30,7 +30,7 @@ class Sequential extends Network with Backpropagation {
     };
   }
 
-  Sequential variation({double rateVariation = 1.0}) {
+  Sequential variation() {
     return Sequential(
       learningRate: learningRate,
     )..layers.addAll(layers.map((e) {
