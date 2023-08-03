@@ -1,6 +1,7 @@
 import 'package:synadart/src/layers/layer.dart';
 import 'package:synadart/src/networks/network.dart';
 import 'package:synadart/src/networks/training/backpropagation.dart';
+import 'package:synadart/src/utils/utils.dart';
 
 /// A `Network` model in which every `Layer` has one input and one output
 /// tensor.
@@ -30,11 +31,11 @@ class Sequential extends Network with Backpropagation {
     };
   }
 
-  Sequential variation() {
+  Sequential variation({Mutation? mutation}) {
     return Sequential(
       learningRate: learningRate,
     )..layers.addAll(layers.map((e) {
-        return e.isInput ? e.copyWith() : e.variation();
+        return e.isInput ? e.copyWith() : e.variation(mutation: mutation);
       }).toList());
   }
 }

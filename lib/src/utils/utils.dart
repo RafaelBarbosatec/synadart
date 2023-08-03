@@ -26,3 +26,5 @@ String secondsToETA(int seconds) {
 
   return eta += '$secondsSink';
 }
+
+typedef Mutation = double Function(double weight);

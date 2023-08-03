@@ -5,6 +5,7 @@ import 'package:sprint/sprint.dart';
 import 'package:synadart/src/activation.dart';
 import 'package:synadart/src/neurons/neuron.dart';
 import 'package:synadart/src/utils/mathematical_operations.dart';
+import 'package:synadart/src/utils/utils.dart';
 
 export 'core/dense.dart';
 export 'recurrent/lstm.dart';
@@ -141,10 +142,10 @@ class Layer {
     };
   }
 
-  Layer variation() {
+  Layer variation({Mutation? mutation}) {
     return copyWith(
       neurons: neurons
-          .map((e) => e.variation())
+          .map((e) => e.variation(mutation:mutation))
           .toList(),
     );
   }

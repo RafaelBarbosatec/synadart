@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:sprint/sprint.dart';
 import 'package:synadart/src/activation.dart';
 import 'package:synadart/src/utils/mathematical_operations.dart';
+import 'package:synadart/src/utils/utils.dart';
 import 'package:synadart/src/utils/value_generator.dart';
 
 /// A representation of a single `Neuron` within a `Network` of `Layers` (of
@@ -186,22 +187,25 @@ class Neuron {
     );
   }
 
-  Neuron variation() {
+  Neuron variation({Mutation? mutation}) {
     var random = Random();
     final limit = 1 / sqrt(weights.length);
     return copyWith(
-      weights: weights.map((e) {
-        switch (random.nextInt(3)) {
-          case 0:
-            return nextDouble(from: -limit, to: limit);
-          case 1:
-            return e + random.nextDouble();
-          case 2:
-            return e * random.nextDouble() + 0.5;
-          default:
-            return e;
-        }
-      }).toList(),
+      weights: weights
+          .map(mutation ??
+              (e) {
+                switch (random.nextInt(4)) {
+                  case 0:
+                    return nextDouble(from: -limit, to: limit);
+                  case 1:
+                    return e + random.nextDouble();
+                  case 2:
+                    return e * random.nextDouble();
+                  default:
+                    return e;
+                }
+              })
+          .toList(),
     );
   }
 }
